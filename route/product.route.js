@@ -98,6 +98,7 @@ productrouter.post('/add', auth('admin', 'seller'), upload.single('image'), asyn
                 image: result.secure_url,
                 description,
                 price,
+                Category,
                 quantity,
                 sellerId: req.user.id
             });
@@ -144,6 +145,7 @@ productrouter.patch('/update/:id', auth('admin', 'seller'), upload.single('image
                     name: name || product.name,
                     image: result.secure_url,
                     description: description || product.description,
+                    Category: Category || product.Category,
                     price: price || product.price,
                     quantity: quantity || product.quantity
                 }, { new: true });
@@ -157,6 +159,7 @@ productrouter.patch('/update/:id', auth('admin', 'seller'), upload.single('image
             const updatedProduct = await Product.findByIdAndUpdate(id, {
                 name: name || product.name,
                 description: description || product.description,
+                Category: Category || product.Category,
                 price: price || product.price,
                 quantity: quantity || product.quantity
             }, { new: true });
