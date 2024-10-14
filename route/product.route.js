@@ -75,7 +75,7 @@ productrouter.get('/:id', auth('admin', 'seller', 'buyer'), async (req, res) => 
 
 // Add a product
 productrouter.post('/add', auth('admin', 'seller'), upload.single('image'), async (req, res) => {
-    const { name, description, price, quantity } = req.body;
+    const { name, description, price, quantity, Category } = req.body;
 
     if (!name || !price || !quantity) {
         return res.status(400).send({ message: "Please enter all required fields" });
@@ -116,7 +116,7 @@ productrouter.post('/add', auth('admin', 'seller'), upload.single('image'), asyn
 
 // Update a product
 productrouter.patch('/update/:id', auth('admin', 'seller'), upload.single('image'), async (req, res) => {
-    const { name, description, price, quantity } = req.body;
+    const { name, description, price, quantity, Category } = req.body;
     const id = req.params.id;
 
     if (!name && !description && !price && !quantity && !req.file) {
