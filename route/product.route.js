@@ -28,11 +28,15 @@ productrouter.get('/', auth('admin', 'seller', 'buyer'), async (req, res) => {
 
 // Search products with filters
 productrouter.get('/search', auth('admin', 'seller', 'buyer'), async (req, res) => {
-    let { name, min, max, page = 1, limit = 10, order = "asc", sortby } = req.query;
+    let { name, min, max, page = 1, limit = 10, order = "asc", sortby, Category } = req.query;
     try {
         let query = {};
         if (name) {
             query.name = { $regex: name, $options: 'i' };
+        }
+
+        if (Category) {
+            query.Category = { $regex: Category, $options: 'i' };
         }
         if (min && max) {
             query.price = { $gte: min, $lte: max };
