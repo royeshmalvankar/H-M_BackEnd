@@ -128,5 +128,40 @@ userrouter.patch('/update/:id',auth('admin'), async (req, res) => {
     }
 })
 
+userrouter.patch("/resetpassword",auth('admin','buyer','seller'),async(req,res )=> {
+    try {
+        const {oldpassword,newpassword} = req.body
+        const id = req.user.id
+        const user= await User.findOne({_id:id})
+        if(user){
+            const isMatch = await bcrypt.compare(oldpassword,user.password)
+            if(isMatch){
+                bcrypt.hash(newpassword,8,function(err,hash){
+                    if (err){
+                        return res.json({"message":`the bcrypt error is ${err}`})
+                    }
+                    user.password = hash
+                    user.save()
+                    const token = req.headers.authorization?.split(" ")[1]
+                    const blacklist = new Blacklist({token})
+                    blacklist.save()
+        res.status(200)
+                })
+                res.status(201)
+                res.json({"message":"password changed successfully"})
+            }else{
+                res.status(400)
+                res.json({"message":"password not matched"})
+            }
+        }
+        else{
+        res.send({"message":"please login first"})
+        }
+        } catch (error) {
+        res.send(`The data is not valid "${error}" or some error occured`)
+    }
+})
+
+
 
 module.exports = userrouter
